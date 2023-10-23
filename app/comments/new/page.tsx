@@ -1,21 +1,23 @@
 'use client';
 
-import { Button, Callout, TextField } from '@radix-ui/themes'
+import { Button, Callout, Text, TextField } from '@radix-ui/themes'
 import SimpleMDE from "react-simplemde-editor";
 import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
 import "easymde/dist/easymde.min.css";
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createCommentSchema } from '@/app/validationSchemas';
+import { z } from 'zod';
 
-interface CommentForm {
-    description: string;
-    comment: string;
-}
+type CommentForm = z.infer<typeof createCommentSchema>;
 
 function NewCommentPage() {
   const router = useRouter();
-  const {register, control, handleSubmit} = useForm<CommentForm>();
+  const {register, control, handleSubmit, formState: { errors }} = useForm<CommentForm>({
+    resolver: zodResolver(createCommentSchema)
+  });
   const [error, setError] = useState('');
 
   return (
@@ -38,11 +40,13 @@ function NewCommentPage() {
             <TextField.Root>
                 <TextField.Input placeholder='Description' {...register('description')} />
             </TextField.Root>
+            {errors.description && <Text color='red' as='p'>{errors.description.message}</Text>}
             <Controller
                 name="comment"
                 control={control}
                 render={({ field }) => <SimpleMDE placeholder='Post comment' {...field}/>}>
             </Controller>
+            {errors.comment && <Text color='red' as='p'>{errors.comment.message}</Text>}
             
             <Button>Submit Post</Button>
         </form>
