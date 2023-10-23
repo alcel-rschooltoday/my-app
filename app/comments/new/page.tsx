@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createCommentSchema } from '@/app/validationSchemas';
 import { z } from 'zod';
+import ErrorMessage from '@/app/components/ErrorMessage';
 
 type CommentForm = z.infer<typeof createCommentSchema>;
 
@@ -40,13 +41,13 @@ function NewCommentPage() {
             <TextField.Root>
                 <TextField.Input placeholder='Description' {...register('description')} />
             </TextField.Root>
-            {errors.description && <Text color='red' as='p'>{errors.description.message}</Text>}
+            <ErrorMessage>{errors.description?.message}</ErrorMessage>
             <Controller
                 name="comment"
                 control={control}
                 render={({ field }) => <SimpleMDE placeholder='Post comment' {...field}/>}>
             </Controller>
-            {errors.comment && <Text color='red' as='p'>{errors.comment.message}</Text>}
+            <ErrorMessage>{errors.comment?.message}</ErrorMessage>
             
             <Button>Submit Post</Button>
         </form>
