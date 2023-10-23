@@ -1,8 +1,9 @@
 import React from 'react'
+import { Button } from '@radix-ui/themes';
 
 function Comments() {
   return (
-    <div>Comments</div>
+    <div><Button>Add Comment</Button></div>
   )
 }
 
