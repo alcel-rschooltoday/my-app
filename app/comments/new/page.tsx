@@ -1,7 +1,8 @@
 'use client';
 
-import { Button, TextArea, TextField } from '@radix-ui/themes'
-import React from 'react'
+import { Button, TextField } from '@radix-ui/themes'
+import SimpleMDE from "react-simplemde-editor";
+import "easymde/dist/easymde.min.css";
 
 function NewCommentPage() {
   return (
@@ -9,7 +10,7 @@ function NewCommentPage() {
         <TextField.Root>
             <TextField.Input placeholder='Description' />
         </TextField.Root>
-        <TextArea placeholder='Post comment' />
+        <SimpleMDE placeholder='Post comment' />
         <Button>Submit Post</Button>
     </div>
   )
