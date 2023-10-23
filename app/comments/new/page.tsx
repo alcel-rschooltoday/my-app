@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createCommentSchema } from '@/app/validationSchemas';
 import { z } from 'zod';
 import ErrorMessage from '@/app/components/ErrorMessage';
+import Spinner from '@/app/components/Spinner';
 
 type CommentForm = z.infer<typeof createCommentSchema>;
 
@@ -20,6 +21,7 @@ function NewCommentPage() {
     resolver: zodResolver(createCommentSchema)
   });
   const [error, setError] = useState('');
+  const [isSubmitting, setSubmitting] = useState(false);
 
   return (
     <div className='max-w-xl'>
@@ -32,9 +34,11 @@ function NewCommentPage() {
             className='space-y-3' 
             onSubmit={handleSubmit(async (data) => {
                 try {
+                    setSubmitting(true);
                     await axios.post('/api/comments', data);
                     router.push('/comments');
                 } catch (error) {
+                    setSubmitting(false);
                     setError('An unexpected error occured.');
                 }
             })}>
@@ -49,7 +53,9 @@ function NewCommentPage() {
             </Controller>
             <ErrorMessage>{errors.comment?.message}</ErrorMessage>
             
-            <Button>Submit Post</Button>
+            <Button disabled={isSubmitting}>
+                Submit Post {isSubmitting && <Spinner />}
+            </Button>
         </form>
     </div>
   )
